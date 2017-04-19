@@ -3,7 +3,6 @@ package structureddata
 import (
 	"encoding/json"
 	"encoding/xml"
-	"fmt"
 )
 
 // ParserData Parser data
@@ -56,53 +55,4 @@ func NewParser(text []byte) Parser {
 		}
 	}
 	return nil
-}
-
-type SearchResult struct {
-	key   string
-	value string
-	level int
-}
-
-// SearchKey Search key
-func SearchKey(data ParserData, expression string) (bool, []SearchResult) {
-	val := searchMap(data, expression, 0)
-
-	return len(val) > 0, val
-}
-
-func searchMap(data ParserData, expression string, level int) []SearchResult {
-	ret := []SearchResult{}
-	switch data.(type) {
-	case map[string]interface{}:
-		if m := data.(map[string]interface{}); m != nil {
-			if i, ok := m[expression]; ok {
-				ret = append(ret, SearchResult{
-					key:   expression,
-					value: fmt.Sprintf("%v", i),
-					level: level,
-				})
-			} else {
-				level++
-				for _, value := range m {
-					switch v := value.(type) {
-					case map[string]interface{}:
-						return searchMap(v, expression, level)
-					default:
-					}
-				}
-			}
-		}
-	case []interface{}:
-		if a := data.([]interface{}); a != nil {
-			level++
-			for _, v := range a {
-				return searchMap(v, expression, level)
-			}
-		}
-
-	default:
-	}
-
-	return ret
 }
