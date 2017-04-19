@@ -1,9 +1,6 @@
 package structureddata
 
-import (
-	"encoding/json"
-	"encoding/xml"
-)
+import "encoding/json"
 
 // ParserData Parser data
 type ParserData interface{}
@@ -26,19 +23,6 @@ func (p JSONParser) Unmarshall() (ParserData, error) {
 	return data, err
 }
 
-// XMLParser XML parser
-type XMLParser struct {
-	text []byte
-	err  error
-}
-
-// Unmarshall Unmarshall
-func (p XMLParser) Unmarshall() (ParserData, error) {
-	var data ParserData
-	err := xml.Unmarshal(p.text, &data)
-	return data, err
-}
-
 // NewParser Determine type of parser based upon input text
 func NewParser(text []byte) Parser {
 	if len(text) > 0 {
@@ -49,9 +33,6 @@ func NewParser(text []byte) Parser {
 		if (startChar == "{" || startChar == "[") &&
 			(endChar == "}" || endChar == "]") {
 			return JSONParser{text: text}
-			// XML
-		} else if startChar == "<" {
-			return XMLParser{text: text}
 		}
 	}
 	return nil

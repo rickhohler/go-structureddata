@@ -1,9 +1,6 @@
 package structureddata
 
-import (
-	"fmt"
-	"testing"
-)
+import "testing"
 
 // Test level 1 successful search.
 func TestSearchKeyTrue1(t *testing.T) {
@@ -12,8 +9,7 @@ func TestSearchKeyTrue1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Error: %s", err.Error())
 	}
-	if found, value := SearchKey(data, "Age", simpleFilterFunc); !found {
-		fmt.Println("key=" + value[0].key)
+	if found, _ := SearchKey(data, "Age", simpleFilterFunc); !found {
 		t.Fatal("Expected true search")
 	}
 }
